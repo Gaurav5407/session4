@@ -1,0 +1,317 @@
+using System;
+
+namespace BANKING
+{
+    public class User
+    {
+        private string userName;
+        private string firstName;
+        private string lastName;
+        private string email;
+
+        public void SetUserName(string userName)
+        {
+            this.userName = userName;
+        }
+        public void SetFirstName(string firstName)
+        {
+            this.firstName = firstName;
+        }
+        public void SetLastName(string lastName)
+        {
+            this.lastName = lastName;
+        }
+        public void SetEmailId(string email)
+        {
+            this.email = email;
+        }
+
+        public string GetUserName()
+        {
+            return (userName);
+        }
+        public string GetFirstName()
+        {
+            return (firstName);
+        }
+
+        public string GetLastName()
+        {
+            return (lastName);
+        }
+
+        public string GetEmail()
+        {
+            return (email);
+        }
+
+    }
+    abstract class Account
+    {
+        private long accountNo;
+        private double balance;
+        private string IFSC_CODE = "BOB123";
+        public void SetAccountNo(long accountNo)
+        {
+            this.accountNo = accountNo;
+        }
+
+        public void SetBalance(double balance)
+        {
+            this.balance = balance;
+        }
+        public long GetAccountNo()
+        {
+            return (accountNo);
+        }
+        public double GetBalance()
+        {
+            return (balance);
+        }
+        public abstract void deposit(double ammount);
+        public abstract void withdrawal(double ammount);
+        public double fetch()
+        {
+            return (balance);
+        }
+    }
+    class SavingAccount : Account
+    {
+        public User user;
+        public override void withdrawal(double ammount)
+        {
+            if (ammount > GetBalance())
+            {
+                Console.WriteLine("insufficient balance");
+            }
+            else if (ammount > 10000)
+            {
+                Console.WriteLine("you can not withdraw above 10000 for saving account");
+            }
+            else
+            {
+                SetBalance(GetBalance() - ammount);
+            }
+        }
+        public override void deposit(double ammount)
+        {
+            if (ammount > 49000)
+            {
+                Console.WriteLine("you can not deposit above 49000");
+            }
+            else
+            {
+                SetBalance(GetBalance() + ammount);
+            }
+        }
+    }
+    class CurrentAccount : Account
+    {
+        public User user;
+        public override void withdrawal(double ammount)
+        {
+            if (ammount > GetBalance())
+            {
+                Console.WriteLine("insufficient balance");
+            }
+            else
+            {
+                SetBalance(GetBalance() - ammount);
+            }
+        }
+        public override void deposit(double ammount)
+        {
+            SetBalance(GetBalance() + ammount);
+        }
+    }
+
+    class Bank
+    {
+        public static void Main(string[] args)
+        {
+            User u1 = new User();
+            Console.Write("Enter a User Name : ");
+            u1.SetUserName(Console.ReadLine());
+
+            Console.Write("Enter a First Name : ");
+            u1.SetFirstName(Console.ReadLine());
+
+            Console.Write("Enter a Last Name : ");
+            u1.SetLastName(Console.ReadLine());
+
+            Console.Write("Enter a Emailid : ");
+            u1.SetEmailId(Console.ReadLine());
+
+            Console.WriteLine("Enter your type");
+            Console.WriteLine("1. Saving account");
+            Console.WriteLine("2. Current account");
+            Console.WriteLine("Enter your choice : ");
+            int choice;
+            choice = Convert.ToInt32(Console.ReadLine());
+
+            if (choice == 1)
+            {
+                SavingAccount account = new SavingAccount();
+                account.user = u1;
+                Console.WriteLine("1. deposit");
+                Console.WriteLine("2. withdraw");
+                Console.WriteLine("3. fetch");
+                Console.WriteLine("4. Transfer");
+                Console.WriteLine("5. Exit");
+                int choiceForsaving;
+                while (true)
+                {
+                    Console.WriteLine("Enter your choice : ");
+                    choiceForsaving = Convert.ToInt32(Console.ReadLine());
+                    double ammount;
+                    switch (choiceForsaving)
+                    {
+                        case 1:
+                            Console.WriteLine("Enter a amount you want to deposit : ");
+                            ammount = Convert.ToDouble(Console.ReadLine());
+                            account.deposit(ammount);
+                            break;
+                        case 2:
+                            Console.WriteLine("Enter a amount you want to withdraw : ");
+                            ammount = Convert.ToDouble(Console.ReadLine());
+                            account.withdrawal(ammount);
+                            break;
+                        case 3:
+                            Console.WriteLine("Your balance is " + account.fetch());
+                            break;
+                        case 4:
+                            Console.WriteLine("1. same bank");
+                            Console.WriteLine("2. different bank");
+                            Console.WriteLine("Enter your choice : ");
+                            int bankChoice = Convert.ToInt32(Console.ReadLine());
+                            if (bankChoice == 1)
+                            {
+                                Console.Write("Enter a amount you want to transfer :");
+                                ammount = Convert.ToDouble(Console.ReadLine());
+                                Console.Write("Enter account no : ");
+                                long accountNo = Convert.ToInt64(Console.ReadLine());
+                                if (ammount > account.GetBalance())
+                                {
+                                    Console.WriteLine("you can not transfer money");
+                                }
+                                else
+                                {
+                                    account.SetBalance(account.GetBalance() - ammount);
+                                }
+                            }
+                            else
+                            {
+                                Console.Write("Enter a amount you want to transfer :");
+                                ammount = Convert.ToDouble(Console.ReadLine());
+                                Console.Write("Enter account no : ");
+                                long accountNo = Convert.ToInt64(Console.ReadLine());
+                                Console.Write("Enter a IFSCCODE : ");
+                                string IFSC_CODE = Console.ReadLine();
+                                if (ammount > account.GetBalance())
+                                {
+                                    Console.WriteLine("you can not transfer money");
+                                }
+                                else
+                                {
+                                    account.SetBalance(account.GetBalance() - ammount);
+                                }
+                            }
+                            break;
+                        case 5:
+                            return;
+                        default:
+                            Console.WriteLine("please choose correct option");
+                            break;
+
+                    } 
+                }
+                Console.ReadLine();
+            }
+            else
+            {
+                CurrentAccount account = new CurrentAccount();
+                account.user = u1;
+                Console.WriteLine("1. deposit");
+                Console.WriteLine("2. withdraw");
+                Console.WriteLine("3. fetch");
+                Console.WriteLine("4. Transfer");
+                Console.WriteLine("5. Exit");
+                int choiceForsaving;
+                while (true)
+                {
+                    Console.WriteLine("Enter your choice : ");
+                    choiceForsaving = Convert.ToInt32(Console.ReadLine());
+                    double ammount;
+                    switch (choiceForsaving)
+                    {
+                        case 1:
+                            Console.WriteLine("Enter a amount you want to deposit : ");
+                            ammount = Convert.ToDouble(Console.ReadLine());
+                            account.deposit(ammount);
+                            break;
+                        case 2:
+                            Console.WriteLine("Enter a amount you want to withdraw : ");
+                            ammount = Convert.ToDouble(Console.ReadLine());
+                            account.withdrawal(ammount);
+                            break;
+                        case 3:
+                            Console.WriteLine("Your balance is " + account.fetch());
+                            break;
+                        case 4:
+                            Console.WriteLine("1. same bank");
+                            Console.WriteLine("2. different bank");
+                            Console.WriteLine("Enter your choice : ");
+                            int bankChoice = Convert.ToInt32(Console.ReadLine());
+                            if (bankChoice == 1)
+                            {
+                                Console.Write("Enter a amount you want to transfer :");
+                                ammount = Convert.ToDouble(Console.ReadLine());
+                                Console.Write("Enter account no : ");
+                                long accountNo = Convert.ToInt64(Console.ReadLine());
+                                if (ammount > account.GetBalance())
+                                {
+                                    Console.WriteLine("you can not transfer money");
+                                }
+                                else
+                                {
+                                    account.SetBalance(ammount);
+                                }
+                            }
+                            else
+                            {
+                                Console.Write("Enter a amount you want to transfer :");
+                                ammount = Convert.ToDouble(Console.ReadLine());
+                                Console.Write("Enter account no : ");
+                                long accountNo = Convert.ToInt64(Console.ReadLine());
+                                Console.Write("Enter a IFSCCODE : ");
+                                string IFSC_CODE = Console.ReadLine();
+                                if (ammount > account.GetBalance())
+                                {
+                                    Console.WriteLine("you can not transfer money");
+                                }
+                                else
+                                {
+                                    account.SetBalance(account.GetBalance() - ammount);
+                                }
+                            }
+                            break;
+                        case 5:
+                            return;
+                        default:
+                            Console.WriteLine("please choose correct option");
+                            break;
+
+                    }
+                    
+                }
+                Console.ReadLine();
+            }
+           
+
+        }
+    }
+
+
+}
+
+
